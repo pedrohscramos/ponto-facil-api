@@ -1,5 +1,6 @@
 package br.com.pontofacil.pontofacilapi.service;
 
+import br.com.pontofacil.pontofacilapi.dto.RegistroPontoResponse;
 import br.com.pontofacil.pontofacilapi.entity.RegistroPonto;
 import br.com.pontofacil.pontofacilapi.entity.User;
 import br.com.pontofacil.pontofacilapi.repository.RegistroPontoRepository;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -35,5 +37,16 @@ public class RegistroPontoService {
         novoRegistro.setDataHora(LocalDateTime.now());
 
         return repository.save(novoRegistro);
+    }
+
+    public List<RegistroPontoResponse> listarMeusPontos(String email) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        return repository.findByUserOrderByDataHoraDesc(user)
+                .stream()
+                .map(p -> new RegistroPontoResponse(p.getId(), p.getTipo(), p.getDataHora()))
+                .toList();
     }
 }
