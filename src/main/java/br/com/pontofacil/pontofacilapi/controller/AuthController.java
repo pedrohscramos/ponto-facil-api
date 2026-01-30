@@ -2,6 +2,8 @@ package br.com.pontofacil.pontofacilapi.controller;
 
 import br.com.pontofacil.pontofacilapi.dto.LoginRequest;
 import br.com.pontofacil.pontofacilapi.dto.TokenResponse;
+import br.com.pontofacil.pontofacilapi.entity.User;
+import br.com.pontofacil.pontofacilapi.repository.UserRepository;
 import br.com.pontofacil.pontofacilapi.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +21,7 @@ public class AuthController {
 
     private final AuthenticationManager authManager;
     private final JwtService jwtService;
+    private final UserRepository userRepository;
 
     @PostMapping("/login")
     public TokenResponse login(@RequestBody LoginRequest request){
@@ -29,7 +32,10 @@ public class AuthController {
                 )
         );
 
-        String token = jwtService.generateToken(auth.getName());
+        User user = userRepository.findByEmail(auth.getName())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        String token = jwtService.generateToken(user);
         return new TokenResponse(token);
     }
 }

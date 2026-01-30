@@ -1,5 +1,7 @@
 package br.com.pontofacil.pontofacilapi.security;
 
+import br.com.pontofacil.pontofacilapi.entity.User;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -16,9 +18,19 @@ public class JwtService {
     @Value("${jwt.expiration}")
     private long expiration;
 
-    public String generateToken(String username){
+    public Claims extractAllClaims(String token){
+        return Jwts.parserBuilder()
+                .setSigningKey(secret.getBytes())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    public String generateToken(User user){
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(user.getEmail())
+                .claim("role", user.getRole())
+                .claim("empresaId", user.getEmpresa().getId())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(Keys.hmacShaKeyFor(secret.getBytes()), SignatureAlgorithm.HS256)
@@ -26,11 +38,10 @@ public class JwtService {
     }
 
     public String extractUsername(String token){
-        return Jwts.parserBuilder()
-                .setSigningKey(secret.getBytes())
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+        return extractAllClaims(token).getSubject();
+    }
+
+    public String extractRole(String token){
+        return extractAllClaims(token).get("role", String.class);
     }
 }
