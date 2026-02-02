@@ -1,5 +1,6 @@
 package br.com.pontofacil.pontofacilapi.repository;
 
+import br.com.pontofacil.pontofacilapi.entity.Empresa;
 import br.com.pontofacil.pontofacilapi.entity.RegistroPonto;
 import br.com.pontofacil.pontofacilapi.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,5 +12,5 @@ public interface RegistroPontoRepository extends JpaRepository<RegistroPonto, Lo
 
     Optional<RegistroPonto> findTopByUserOrderByDataHoraDesc(User user);
 
-    List<RegistroPonto> findByUserOrderByDataHoraDesc(User user);
+    List<RegistroPonto> findByUser_EmpresaOrderByDataHoraDesc(Empresa empresa);
 }
