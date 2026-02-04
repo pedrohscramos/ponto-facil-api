@@ -4,6 +4,9 @@ import br.com.pontofacil.pontofacilapi.dto.AtualizarUsuarioRequest;
 import br.com.pontofacil.pontofacilapi.dto.CriarUsuarioRequest;
 import br.com.pontofacil.pontofacilapi.dto.UserResponse;
 import br.com.pontofacil.pontofacilapi.entity.User;
+import br.com.pontofacil.pontofacilapi.exception.AcessoNegadoException;
+import br.com.pontofacil.pontofacilapi.exception.RecursoNaoEncontradoException;
+import br.com.pontofacil.pontofacilapi.exception.RegraNegocioException;
 import br.com.pontofacil.pontofacilapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,10 +24,10 @@ public class AdminUserService {
     public void criarUsuario(String emailAdmin, CriarUsuarioRequest request){
 
         User admin = userRepository.findByEmail(emailAdmin)
-                .orElseThrow(() -> new IllegalStateException("Administrador não encontrado."));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Administrador não encontrado."));
 
         if(userRepository.existsByEmail(request.email())){
-            throw new RuntimeException("E-mail já cadastrado");
+            throw new RegraNegocioException("E-mail já cadastrado");
         }
 
         User novoUsuario = new User();
@@ -39,7 +42,7 @@ public class AdminUserService {
     public List<UserResponse> listarUsuarios(String emailAdmin){
 
         User admin = userRepository.findByEmail(emailAdmin)
-                .orElseThrow(() -> new IllegalStateException("Administrador não encontrado."));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Administrador não encontrado."));
 
         return userRepository.findByEmpresa(admin.getEmpresa())
                 .stream()
@@ -54,13 +57,13 @@ public class AdminUserService {
     public void atualizarUsuario(String emailAdmin, Long userId, AtualizarUsuarioRequest request){
 
         User admin = userRepository.findByEmail(emailAdmin)
-                .orElseThrow(() -> new IllegalStateException("Administrador não encontrado."));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Administrador não encontrado."));
 
         User usuario = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
 
         if(!usuario.getEmpresa().getId().equals(admin.getEmpresa().getId())){
-            throw new IllegalStateException("Acesso negado");
+            throw new AcessoNegadoException("Acesso negado");
         }
 
         if(request.email() != null){
@@ -76,13 +79,13 @@ public class AdminUserService {
     public void deletarUsuario(String emailAdmin, Long userId){
 
         User admin = userRepository.findByEmail(emailAdmin)
-                .orElseThrow(() -> new IllegalStateException("Administrador não encontrado."));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Administrador não encontrado."));
 
         User usuario = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
 
         if(!usuario.getEmpresa().getId().equals(admin.getEmpresa().getId())){
-            throw new IllegalStateException("Acesso negado");
+            throw new AcessoNegadoException("Acesso negado");
         }
 
         userRepository.delete(usuario);
