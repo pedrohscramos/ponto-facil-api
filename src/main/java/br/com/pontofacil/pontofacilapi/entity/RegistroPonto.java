@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Table(name = "registros_ponto")
 @Getter
 @Setter
-public class RegistroPonto {
+public class RegistroPonto extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

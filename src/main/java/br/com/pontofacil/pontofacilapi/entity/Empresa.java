@@ -8,7 +8,7 @@ import lombok.Setter;
 @Table(name = "empresas")
 @Getter
 @Setter
-public class Empresa {
+public class Empresa extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
