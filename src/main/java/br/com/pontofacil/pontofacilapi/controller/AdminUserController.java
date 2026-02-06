@@ -39,7 +39,7 @@ public class AdminUserController {
     @PutMapping("/{id}")
     public ResponseEntity<Void> atualizar(
             @PathVariable Long id,
-            @RequestBody AtualizarUsuarioRequest request,
+            @RequestBody @Valid AtualizarUsuarioRequest request,
             Authentication authentication
             ){
         service.atualizarUsuario(authentication.getName(), id, request);

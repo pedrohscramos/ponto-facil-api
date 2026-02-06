@@ -3,6 +3,7 @@ package br.com.pontofacil.pontofacilapi.exception;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -71,6 +72,29 @@ public class ApiExceptionHandler {
                         500,
                         "Erro interno do servidor",
                         ex.getMessage(),
+                        request.getRequestURI()
+                )
+        );
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiErrorResponse> handleValidation(
+            MethodArgumentNotValidException ex,
+            HttpServletRequest request
+    ) {
+        String mensagem = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(err -> err.getField() + ": " + err.getDefaultMessage())
+                .findFirst()
+                .orElse("Dados inválidos");
+
+        return ResponseEntity.badRequest().body(
+                new ApiErrorResponse(
+                        LocalDateTime.now(),
+                        400,
+                        "Validação",
+                        mensagem,
                         request.getRequestURI()
                 )
         );

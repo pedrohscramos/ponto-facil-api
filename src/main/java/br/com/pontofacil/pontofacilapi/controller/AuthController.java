@@ -5,6 +5,7 @@ import br.com.pontofacil.pontofacilapi.dto.TokenResponse;
 import br.com.pontofacil.pontofacilapi.entity.User;
 import br.com.pontofacil.pontofacilapi.repository.UserRepository;
 import br.com.pontofacil.pontofacilapi.security.JwtService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,7 +25,7 @@ public class AuthController {
     private final UserRepository userRepository;
 
     @PostMapping("/login")
-    public TokenResponse login(@RequestBody LoginRequest request){
+    public TokenResponse login(@RequestBody @Valid LoginRequest request){
 
         Authentication auth = authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
