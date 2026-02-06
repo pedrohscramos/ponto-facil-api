@@ -120,3 +120,48 @@ spring:
 ```bash
 mvn spring-boot:run
 ```
+
+## 🔑 Fluxo básico
+
+1. Criar empresa (manual ou seed)
+2. Criar admin da empresa
+3. Login → JWT
+4. Admin cria usuários
+5. Funcionários registram ponto
+
+---
+
+### Endpoints principais
+## Autenticação
+- POST /auth/login — Autenticação
+- GET /auth/me — Dados do usuário logado
+## Funcionários
+- POST /pontos — Registrar ponto
+- GET /pontos/meus — Listar pontos 
+## Admin
+- POST /admin/usuarios — Criar usuário
+- GET /admin/usuarios — Listar usuários
+- PUT /admin/usuarios/{id} — Atualizar usuário
+- DELETE /admin/usuarios/{id} — Deletar usuário
+- GET /admin/pontos — Listar pontos da empresa
+- GET /admin/pontos?mes=1&ano=2026&page=0&size=10 — Listar pontos com paginação e filtros
+
+---
+## 📐 Padrões adotados
+
+- DTOs para entrada e saída
+- Services com regra de negócio
+- Repositories enxutos
+- Erros padronizados
+- Segurança centralizada
+- Multiempresa sempre filtrada pelo backend
+---
+## 📄 Licença
+
+Projeto em desenvolvimento — uso livre para estudo e evolução.
+
+---
+## ✨ Autor
+
+Pedro Ramos
+Arquiteto / Desenvolvedor Java
