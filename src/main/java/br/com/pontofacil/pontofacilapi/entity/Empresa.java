@@ -1,5 +1,6 @@
 package br.com.pontofacil.pontofacilapi.entity;
 
+import br.com.pontofacil.pontofacilapi.enums.PlanoEmpresa;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,5 +20,6 @@ public class Empresa extends AuditableEntity {
     @Column(unique = true)
     private String slug;
 
-    private String plano;
+    @Enumerated(EnumType.STRING)
+    private PlanoEmpresa plano;
 }

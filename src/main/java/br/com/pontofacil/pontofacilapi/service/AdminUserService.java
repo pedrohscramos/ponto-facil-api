@@ -20,11 +20,17 @@ public class AdminUserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PlanoService planoService;
+
 
     public void criarUsuario(String emailAdmin, CriarUsuarioRequest request){
 
+
+
         User admin = userRepository.findByEmail(emailAdmin)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Administrador não encontrado."));
+
+        planoService.validarCriacaoUsuario(admin.getEmpresa());
 
         if(userRepository.existsByEmail(request.email())){
             throw new RegraNegocioException("E-mail já cadastrado");

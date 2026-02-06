@@ -17,6 +17,7 @@ public class RegistroPontoService {
 
     private final RegistroPontoRepository repository;
     private final UserRepository userRepository;
+    private final PlanoService planoService;
 
     public RegistroPonto registrar(String email, String tipo){
 
@@ -35,6 +36,8 @@ public class RegistroPontoService {
         novoRegistro.setUser(user);
         novoRegistro.setTipo(tipo);
         novoRegistro.setDataHora(LocalDateTime.now());
+
+        planoService.validarRegistroPonto(user.getEmpresa());
 
         return repository.save(novoRegistro);
     }

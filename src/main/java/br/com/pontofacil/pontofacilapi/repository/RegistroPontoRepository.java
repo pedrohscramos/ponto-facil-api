@@ -20,6 +20,11 @@ public interface RegistroPontoRepository extends JpaRepository<RegistroPonto, Lo
 
     List<RegistroPonto> findByUserOrderByDataHoraDesc(User user);
 
+    long countByUser_EmpresaAndDataHoraAfter(
+            Empresa empresa,
+            LocalDateTime dataHora
+    );
+
     Page<RegistroPonto> findByUser_EmpresaAndDataHoraBetween(
             Empresa empresa,
             LocalDateTime inicio,
